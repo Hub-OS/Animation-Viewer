@@ -1,0 +1,44 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvasContainer {
+  border: 1px solid blue;
+  aspect-ratio: 1;
+  max-height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.root canvas {
+  /* border: 1px solid grey; */
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.sceneControls {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sceneControls > div {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.sceneControls > div span {
+  width: 94px;
+  display: inline-block;
+}

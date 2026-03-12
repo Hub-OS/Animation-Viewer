@@ -1,0 +1,54 @@
+.listBorder {
+  display: flex;
+  flex-direction: column;
+  border: 8px grey dashed;
+  flex: 1;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  box-sizing: content-box;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  gap: 8px;
+}
+
+.listRow:hover {
+  background: #fff3;
+}
+
+.listRow > div {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  min-width: 80px;
+}
+
+.listRow select {
+  min-width: 128px;
+}
+
+.dropTarget {
+  background: #fff5;
+}
+
+.dragLine {
+  height: 1px;
+  background: white;
+}
+
+.error {
+  color: red;
+}
+
+.hidden {
+  visibility: hidden;
+}

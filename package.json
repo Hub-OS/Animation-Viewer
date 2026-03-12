@@ -1,0 +1,38 @@
+{
+  "name": "animation-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "UNLICENSE",
+  "scripts": {
+    "start": "parcel index.html --dist-dir _dev",
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run licenses && parcel build --public-url ./ index.html",
+    "deploy": "git subtree push --prefix dist origin gh-pages",
+    "licenses": "license-ripper -o _licenses.json --include-homepage"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "license-ripper": "^0.7.0",
+    "parcel": "^2.16.4",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@headless-tree/core": "^1.6.3",
+    "@headless-tree/react": "^1.6.3",
+    "@mui/icons-material": "^7.3.9",
+    "@mui/material": "^7.3.9",
+    "classnames": "^2.5.1",
+    "compute-lcm": "^1.1.2",
+    "quote-unquote": "^1.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "uuid": "^13.0.0"
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
+  }
+}

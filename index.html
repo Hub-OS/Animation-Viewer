@@ -1,4 +1,4 @@
-<link rel=stylesheet href=animation_viewer.340b5b2f.css><title>Animation Viewer</title><link href=animation_viewer.c3059035.css rel=stylesheet><script type=module src=animation_viewer.425ffcff.js defer></script><script type=module src=animation_viewer.fea5c594.js defer></script><body>
+<link rel=stylesheet href=animation_viewer.340b5b2f.css><title>Animation Viewer</title><link href=animation_viewer.c3059035.css rel=stylesheet><script type=module src=animation_viewer.757588af.js defer></script><script type=module src=animation_viewer.fea5c594.js defer></script><body>
   <div id=app></div>
 
   <dialog id=about-dialog popover>
@@ -23,12 +23,18 @@
     <div class=about-section-body>
       <p>
         Drag and drop BoomSheets `.animation` and `.png` files with matching
-        names into the dashed box.
+        names into the dashed box to add them to the scene. Dropping files with
+        the same name again will reload animations for existing sprites.
       </p>
 
       <p>
-        You can reorganize animations in the dashed list to view attachments and
-        affect the draw order.
+        You can reorganize sprites in the dashed list to create attachments and
+        adjust the draw order.
+      </p>
+
+      <p>
+        Any files containing the word "background" or ending in "_bg" will
+        default to the BG playback mode.
       </p>
     </div>
 

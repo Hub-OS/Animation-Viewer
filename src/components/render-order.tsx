@@ -203,7 +203,13 @@ function removeItem(
     updateRenderTreeChildren(treeData, parentItem.getId(), () => newChildren);
   });
 
-  delete treeData.nodes[item.getId()];
+  const pendingRemoval = [item.getId()];
+  let nextId;
+
+  while ((nextId = pendingRemoval.pop()) != undefined) {
+    pendingRemoval.push(...treeData.nodes[nextId].children);
+    delete treeData.nodes[nextId];
+  }
 
   renderTreeSignal.set(treeData);
 

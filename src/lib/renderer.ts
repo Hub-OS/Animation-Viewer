@@ -77,7 +77,7 @@ function parseFrameDuration(durationString: string) {
   const duration =
     durationString.endsWith("f") || durationString.endsWith("F")
       ? parseInt(durationString)
-      : Math.floor(parseFloat(durationString) * 60);
+      : Math.round(parseFloat(durationString) * 60);
 
   // prevent negative values
   return Math.max(duration, 0);

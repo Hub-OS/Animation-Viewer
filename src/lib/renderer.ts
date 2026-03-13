@@ -15,7 +15,19 @@ export function calculateLoopDuration(renderTree: RenderTree) {
   let loopingDurations: number[] = [];
   let constantDuration = 0;
 
-  for (const node of Object.values(renderTree.nodes)) {
+  const queue = [...renderTree.rootOrder];
+  let id;
+
+  while ((id = queue.pop())) {
+    const node = renderTree.nodes[id];
+
+    if (node.hidden) {
+      // avoid calculating subtree
+      continue;
+    }
+
+    queue.push(...node.children);
+
     if (node.playback == "SYNC") {
       // the duration of this node is decided by a different node
       continue;

@@ -184,7 +184,6 @@ export default function createRenderer(
       const anim = getAnim(renderItem);
 
       if (!anim) {
-        console.log(renderItem.sheet.animations, renderItem.state);
         continue;
       }
 

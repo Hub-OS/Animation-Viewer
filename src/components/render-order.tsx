@@ -349,7 +349,6 @@ export default function InputSheetList({
                       const treeData = { ...renderTreeSignal.get() };
                       treeData.nodes[item.getId()].parentPoint = e.target.value;
                       renderTreeSignal.set(treeData);
-                      console.log(e.target.value);
                     }}
                     onClick={(e) => e.stopPropagation()}
                   >

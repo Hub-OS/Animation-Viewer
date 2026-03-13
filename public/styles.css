@@ -42,6 +42,7 @@ input[type="color"] {
   background: none;
   width: 32px;
   height: 32px;
+  border: 0;
 }
 
 body {

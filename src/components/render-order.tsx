@@ -17,6 +17,8 @@ import ExpandLessIcon from "@mui/icons-material/ChevronRight";
 import PointIcon from "@mui/icons-material/MyLocation";
 import AnimationIcon from "@mui/icons-material/Animation";
 import PlaybackIcon from "@mui/icons-material/Loop";
+import HideIcon from "@mui/icons-material/VisibilityOutlined";
+import ShowIcon from "@mui/icons-material/VisibilityOffOutlined";
 import AttachIcon from "@mui/icons-material/Add";
 import * as headlessTreeCore from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
@@ -34,6 +36,7 @@ export type RenderItem = {
   parentPoint: string;
   state: string;
   playback: "ONCE" | "SYNC" | "LOOP" | "BG";
+  hidden?: boolean;
   children: string[];
 };
 
@@ -440,6 +443,20 @@ export default function InputSheetList({
                   }}
                 >
                   <AttachIcon />
+                </button>
+
+                <button
+                  title={renderItem.hidden ? "Show" : "Hide"}
+                  className="icon-button"
+                  disabled={recording}
+                  onClick={(e) => {
+                    const renderTree = { ...renderTreeSignal.get() };
+                    renderItem.hidden = !renderItem.hidden;
+                    renderTreeSignal.set(renderTree);
+                    e.stopPropagation();
+                  }}
+                >
+                  {renderItem.hidden ? <ShowIcon /> : <HideIcon />}
                 </button>
 
                 <button

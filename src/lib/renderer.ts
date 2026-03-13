@@ -188,6 +188,10 @@ export default function createRenderer(
 
       const renderItem = renderTree.nodes[id];
 
+      if (renderItem.hidden) {
+        continue;
+      }
+
       const anim = getAnim(renderItem);
 
       if (!anim) {

@@ -291,4 +291,6 @@ export function createAttachment(
     playback: attachment.playback,
     children: attachment.reparents && parentId != "root" ? [parentId] : [],
   };
+
+  return id;
 }

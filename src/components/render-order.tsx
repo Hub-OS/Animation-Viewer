@@ -509,8 +509,9 @@ export default function InputSheetList({
           }).map((attachment) => (
             <button
               key={attachment.name}
-              popoverTarget={popoverId}
               onClick={() => {
+                document.getElementById(popoverId)?.hidePopover();
+
                 if (!popoverItem) {
                   return;
                 }
@@ -519,13 +520,19 @@ export default function InputSheetList({
                 const renderTree = { ...renderTreeSignal.get() };
                 const sheets = { ...sheetsSignal.get() };
 
-                createAttachment(sheets, renderTree, parentId, attachment);
+                const attachmentId = createAttachment(
+                  sheets,
+                  renderTree,
+                  parentId,
+                  attachment,
+                );
 
                 sheetsSignal.set(sheets);
                 renderTreeSignal.set(renderTree);
 
                 tree.rebuildTree();
                 popoverItem.expand();
+                tree.getItemInstance(attachmentId).expand();
               }}
             >
               {attachment.name}

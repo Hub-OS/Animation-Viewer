@@ -187,6 +187,41 @@ export const ATTACHMENTS: CommonAttachment[] = [
       },
     ],
   },
+  {
+    name: "^TILE",
+    parentPoint: "ORIGIN",
+    playback: "ONCE",
+    root: true,
+    image: loadImage(new URL("../../public/tile.png", import.meta.url)),
+    frames: [
+      {
+        ...FRAME_DEFAULTS,
+        x: 0,
+        y: 0,
+        w: 40,
+        h: 30,
+        originx: 20,
+        originy: 12,
+      },
+    ],
+  },
+  {
+    name: "^BG",
+    parentPoint: "ORIGIN",
+    playback: "BG",
+    root: true,
+    image: loadImage(new URL("../../public/PLAIN_GRID.png", import.meta.url)),
+    frames: [
+      {
+        ...FRAME_DEFAULTS,
+        x: 0,
+        y: 0,
+        w: 16,
+        h: 16,
+        points: [{ label: "VELOCITY", x: -0.32, y: 0.0 }],
+      },
+    ],
+  },
 ];
 
 export const ATTACHMENT_MAP: { [name: string]: CommonAttachment } = {};
@@ -207,6 +242,9 @@ export function createAttachment(
 
   if (parentId == "root") {
     renderTree.rootOrder = [...renderTree.rootOrder, id];
+  } else if (attachment.root) {
+    const index = renderTree.rootOrder.indexOf(parentId);
+    renderTree.rootOrder = renderTree.rootOrder.toSpliced(index, 0, id);
   } else {
     const parentNode = renderTree.nodes[parentId];
     parentNode.children = [...parentNode.children, id];

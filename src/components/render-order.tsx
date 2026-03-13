@@ -482,9 +482,13 @@ export default function InputSheetList({
               return false;
             }
 
-            const selectedRoot = popoverItem.getId() == "root";
+            const id = popoverItem.getId();
 
-            return selectedRoot == !!attachment.root;
+            if (id == "root") {
+              return attachment.root;
+            }
+
+            return !attachment.root || treeData.rootOrder.includes(id);
           }).map((attachment) => (
             <button
               key={attachment.name}

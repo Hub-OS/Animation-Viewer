@@ -228,17 +228,8 @@ export function createAttachment(
         name: attachment.name,
         boomsheet: boomSheet,
         animations: boomSheet.animations,
+        image: attachment.image,
       };
-
-      try {
-        // load image
-
-        sheet.image = attachment.image;
-        sheet.imageError = undefined;
-      } catch (error) {
-        console.error(error);
-        sheet.imageError = error!.toString();
-      }
 
       sheets[attachment.name] = sheet;
     }

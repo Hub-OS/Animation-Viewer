@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { Signal, useSignal, useSignalValue } from "../hooks/use-signal";
 import {
   BoomSheet,
@@ -293,8 +293,8 @@ export default function InputSheetList({
     ],
   });
 
-  const popoverContext =
-    useSignal<headlessTreeCore.ItemInstance<RenderItem> | null>(null);
+  const [popoverItem, setPopoverItem] =
+    useState<headlessTreeCore.ItemInstance<RenderItem> | null>(null);
   const popoverId = useId();
 
   return (
@@ -435,7 +435,7 @@ export default function InputSheetList({
                   disabled={recording}
                   popoverTarget={popoverId}
                   onClick={(e) => {
-                    popoverContext.set(item);
+                    setPopoverItem(item);
                     e.stopPropagation();
                   }}
                 >
@@ -477,25 +477,25 @@ export default function InputSheetList({
 
       <div id={popoverId} popover="auto" className={classes.attachmentPopover}>
         <div className={classes.attachmentList}>
-          {ATTACHMENTS.map((attachment) => (
+          {ATTACHMENTS.filter((attachment) => {
+            if (!popoverItem) {
+              return false;
+            }
+
+            const selectedRoot = popoverItem.getId() == "root";
+
+            return selectedRoot == !!attachment.root;
+          }).map((attachment) => (
             <button
               key={attachment.name}
               popoverTarget={popoverId}
               onClick={() => {
-                const parentItem = popoverContext.get();
-
-                if (!parentItem) {
+                if (!popoverItem) {
                   return;
                 }
 
-                const parentId = parentItem.getId();
-
+                const parentId = popoverItem.getId();
                 const renderTree = { ...renderTreeSignal.get() };
-
-                if (!parentId || !renderTree.nodes[parentId]) {
-                  return;
-                }
-
                 const sheets = { ...sheetsSignal.get() };
 
                 createAttachment(sheets, renderTree, parentId, attachment);
@@ -504,7 +504,7 @@ export default function InputSheetList({
                 renderTreeSignal.set(renderTree);
 
                 tree.rebuildTree();
-                parentItem.expand();
+                popoverItem.expand();
               }}
             >
               {attachment.name}

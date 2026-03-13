@@ -1,5 +1,6 @@
 import { BoomSheet, BoomSheetsFrame } from "../boomsheets-animations";
 import {
+  InputSheet,
   InputSheets,
   RenderItem,
   RenderTree,
@@ -10,6 +11,7 @@ type CommonAttachment = {
   name: string;
   parentPoint: string;
   playback: RenderItem["playback"];
+  root?: boolean;
 } & (
   | {}
   | {
@@ -202,11 +204,15 @@ export function createAttachment(
   attachment: CommonAttachment,
 ) {
   const id = uuidv4();
-  const parentNode = renderTree.nodes[parentId];
 
-  parentNode.children = [...parentNode.children, id];
+  if (parentId == "root") {
+    renderTree.rootOrder = [...renderTree.rootOrder, id];
+  } else {
+    const parentNode = renderTree.nodes[parentId];
+    parentNode.children = [...parentNode.children, id];
+  }
 
-  let sheet = parentNode.sheet;
+  let sheet: InputSheet | undefined;
   let state = attachment.name;
 
   if ("image" in attachment) {
@@ -238,6 +244,8 @@ export function createAttachment(
     }
 
     state = "DEFAULT";
+  } else {
+    sheet = renderTree.nodes[parentId]?.sheet;
   }
 
   renderTree.nodes[id] = {

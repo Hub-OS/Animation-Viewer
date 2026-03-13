@@ -2,6 +2,15 @@ import { RenderItem, RenderTree } from "../components/render-order";
 import { BoomSheetsAnimation, BoomSheetsFrame } from "../boomsheets-animations";
 import lcm from "compute-lcm";
 
+function checkedLcm(values: number[]) {
+  console.log(values);
+  values = values.filter((n) => Number.isFinite(n) && n > 0);
+  console.log(values);
+
+  const defaultValue = values[0] ?? 0;
+  return values.length == 0 ? defaultValue : (lcm(...values) ?? defaultValue);
+}
+
 export function calculateLoopDuration(renderTree: RenderTree) {
   let loopingDurations: number[] = [];
   let constantDuration = 0;
@@ -43,9 +52,11 @@ export function calculateLoopDuration(renderTree: RenderTree) {
       if (velPoint) {
         const firstFrame = anim.frames[0];
 
-        duration =
-          lcm(duration, firstFrame.w / velPoint.x, firstFrame.h / velPoint.y) ??
-          0;
+        duration = checkedLcm([
+          duration,
+          Math.abs(firstFrame.w / velPoint.x),
+          Math.abs(firstFrame.h / velPoint.y),
+        ]);
       }
     }
 
@@ -54,11 +65,7 @@ export function calculateLoopDuration(renderTree: RenderTree) {
     }
   }
 
-  const defaultLoopDuration = loopingDurations[0] ?? 0;
-  let loopDuration =
-    loopingDurations.length == 0
-      ? defaultLoopDuration
-      : (lcm(...loopingDurations) ?? defaultLoopDuration);
+  let loopDuration = checkedLcm(loopingDurations);
 
   if (loopDuration == 0) {
     // no loop, just use the constant duration

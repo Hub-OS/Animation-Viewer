@@ -12,6 +12,7 @@ type CommonAttachment = {
   parentPoint: string;
   playback: RenderItem["playback"];
   root?: boolean;
+  reparents?: boolean;
 } & (
   | {}
   | {
@@ -188,10 +189,11 @@ export const ATTACHMENTS: CommonAttachment[] = [
     ],
   },
   {
-    name: "^TILE",
+    name: "<TILE",
     parentPoint: "ORIGIN",
     playback: "ONCE",
     root: true,
+    reparents: true,
     image: loadImage(new URL("../../public/tile.png", import.meta.url)),
     frames: [
       {
@@ -244,7 +246,11 @@ export function createAttachment(
     renderTree.rootOrder = [...renderTree.rootOrder, id];
   } else if (attachment.root) {
     const index = renderTree.rootOrder.indexOf(parentId);
-    renderTree.rootOrder = renderTree.rootOrder.toSpliced(index, 0, id);
+    renderTree.rootOrder = renderTree.rootOrder.toSpliced(
+      index,
+      attachment.reparents ? 1 : 0,
+      id,
+    );
   } else {
     const parentNode = renderTree.nodes[parentId];
     parentNode.children = [...parentNode.children, id];
@@ -283,6 +289,6 @@ export function createAttachment(
     parentPoint: attachment.parentPoint,
     state,
     playback: attachment.playback,
-    children: [],
+    children: attachment.reparents && parentId != "root" ? [parentId] : [],
   };
 }

@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Signal, useSignal, useSignalValue } from "../hooks/use-signal";
+import { Signal, useSignalValue } from "../hooks/use-signal";
 import {
   BoomSheet,
   BoomSheetsAnimation,

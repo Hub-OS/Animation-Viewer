@@ -77,41 +77,12 @@ export const ATTACHMENTS: CommonAttachment[] = [
       { ...FRAME_DEFAULTS, duration: "1f" },
     ],
   },
-  // can't be added until we add some delay
+  // can't be added until we add a delay feature
   // {
   //   name: "BLADE",
   //   parentPoint: "ENDPOINT",
   //   playback: "ONCE",
   // },
-  {
-    name: "*BOMB",
-    parentPoint: "HAND",
-    playback: "SYNC",
-    image: loadImage(new URL("../../public/bomb.png", import.meta.url)),
-    frames: [
-      {
-        ...FRAME_DEFAULTS,
-        x: 1,
-        y: 1,
-        w: 11,
-        h: 11,
-        originx: 7,
-        originy: 6,
-      },
-      {
-        ...FRAME_DEFAULTS,
-        x: 1,
-        y: 1,
-        w: 11,
-        h: 11,
-        originx: 7,
-        originy: 6,
-      },
-      {
-        ...FRAME_DEFAULTS,
-      },
-    ],
-  },
   {
     name: "*BLADE",
     parentPoint: "ENDPOINT",
@@ -182,6 +153,35 @@ export const ATTACHMENTS: CommonAttachment[] = [
         originx: 13,
         originy: 14,
         duration: "0.067",
+      },
+    ],
+  },
+  {
+    name: "*BOMB",
+    parentPoint: "HAND",
+    playback: "SYNC",
+    image: loadImage(new URL("../../public/bomb.png", import.meta.url)),
+    frames: [
+      {
+        ...FRAME_DEFAULTS,
+        x: 1,
+        y: 1,
+        w: 11,
+        h: 11,
+        originx: 7,
+        originy: 6,
+      },
+      {
+        ...FRAME_DEFAULTS,
+        x: 1,
+        y: 1,
+        w: 11,
+        h: 11,
+        originx: 7,
+        originy: 6,
+      },
+      {
+        ...FRAME_DEFAULTS,
       },
     ],
   },

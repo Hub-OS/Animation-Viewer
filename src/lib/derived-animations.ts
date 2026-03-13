@@ -8,31 +8,24 @@ import {
 
 const ANIMATIONS = [
   {
+    state: "CHARACTER_MOVE",
+    frameData: [
+      [1, 2],
+      [2, 1],
+      [3, 1],
+      [4, 1],
+      [3, 1],
+      [2, 1],
+      [1, 2],
+    ],
+  },
+  {
     state: "CHARACTER_SHOOT",
     frameData: [
       [1, 1],
       [2, 2],
       [3, 2],
       [1, 1],
-    ],
-  },
-  {
-    state: "CHARACTER_THROW",
-    frameData: [
-      [1, 5],
-      [2, 4],
-      [3, 3],
-      [4, 5],
-      [5, 4],
-    ],
-  },
-  {
-    state: "CHARACTER_SWING_HILT",
-    frameData: [
-      [1, 8],
-      [2, 2],
-      [3, 2],
-      [4, 15],
     ],
   },
   {
@@ -45,15 +38,22 @@ const ANIMATIONS = [
     ],
   },
   {
-    state: "CHARACTER_MOVE",
+    state: "CHARACTER_SWING_HILT",
     frameData: [
-      [1, 2],
-      [2, 1],
-      [3, 1],
-      [4, 1],
-      [3, 1],
-      [2, 1],
-      [1, 2],
+      [1, 8],
+      [2, 2],
+      [3, 2],
+      [4, 15],
+    ],
+  },
+  {
+    state: "CHARACTER_THROW",
+    frameData: [
+      [1, 5],
+      [2, 4],
+      [3, 3],
+      [4, 5],
+      [5, 4],
     ],
   },
 ];

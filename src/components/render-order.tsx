@@ -193,14 +193,44 @@ function duplicateItem(
   renderTreeSignal.set(treeData);
 }
 
+function removeUnusedSheets(
+  sheetsSignal: Signal<InputSheets>,
+  renderTree: RenderTree,
+) {
+  let sheetsMap = sheetsSignal.get();
+
+  // track used sheets
+  const visitedSheets: { [name: string]: boolean } = {};
+
+  for (const node of Object.values(renderTree.nodes)) {
+    if (node.sheet) {
+      visitedSheets[node.sheet.name] = true;
+    }
+  }
+
+  // delete unused sheets
+  let modified = false;
+  sheetsMap = { ...sheetsSignal.get() };
+
+  for (const name in sheetsMap) {
+    if (!visitedSheets[name]) {
+      delete sheetsMap[name];
+      modified = true;
+    }
+  }
+
+  // update if we deleted a sheet
+  if (modified) {
+    sheetsSignal.set(sheetsMap);
+  }
+}
+
 function removeItem(
   renderTreeSignal: Signal<RenderTree>,
   sheetsSignal: Signal<InputSheets>,
   item: headlessTreeCore.ItemInstance<RenderItem>,
 ) {
   const treeData = { ...renderTreeSignal.get() };
-
-  const sheet = item.getItemData().sheet;
 
   headlessTreeCore.removeItemsFromParents([item], (parentItem, newChildren) => {
     updateRenderTreeChildren(treeData, parentItem.getId(), () => newChildren);
@@ -216,16 +246,7 @@ function removeItem(
 
   renderTreeSignal.set(treeData);
 
-  // possibly expensive to use Object.values, but we're expecting only a few nodes for quick viewing
-  // if there's a need for larger scenes, we could switch to reference counting
-  // but it's likely going to be fast enough even with hundreds of nodes
-
-  if (!Object.values(treeData.nodes).some((node) => node.sheet == sheet)) {
-    // delete the sheet if no render items are using it
-    const sheetsMap = { ...sheetsSignal.get() };
-    delete sheetsMap[sheet.name];
-    sheetsSignal.set(sheetsMap);
-  }
+  removeUnusedSheets(sheetsSignal, treeData);
 }
 
 export default function InputSheetList({

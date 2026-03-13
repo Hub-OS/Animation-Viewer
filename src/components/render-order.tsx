@@ -19,6 +19,7 @@ import PlaybackIcon from "@mui/icons-material/Loop";
 import * as headlessTreeCore from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import classNames from "classnames";
+import { generateDerivedAnimations } from "../lib/derived-animations";
 
 export type RenderTree = {
   rootOrder: string[];
@@ -134,6 +135,8 @@ async function loadFiles(
         sheet.boomsheet = parseSheet(text);
         sheet.animations = sheet.boomsheet.animations;
         sheet.animationError = undefined;
+
+        generateDerivedAnimations(sheet.boomsheet);
       } catch (error) {
         console.error(error);
         sheet.animationError = error!.toString();
@@ -277,7 +280,7 @@ export default function InputSheetList({
       headlessTreeCore.syncDataLoaderFeature,
       // headlessTreeCore.selectionFeature,
       headlessTreeCore.dragAndDropFeature,
-      headlessTreeCore.hotkeysCoreFeature,
+      // headlessTreeCore.hotkeysCoreFeature, // a little annoying to use dropdowns when this is enabled
     ],
   });
 

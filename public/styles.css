@@ -38,6 +38,12 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+input[type="color"] {
+  background: none;
+  width: 32px;
+  height: 32px;
+}
+
 body {
   display: flex;
   flex-direction: column;

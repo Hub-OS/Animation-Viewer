@@ -46,6 +46,7 @@ export default function Animator({
   const scaleSignal = useSignal("2");
   const originXSignal = useSignal(DEFAULT_ORIGIN_X);
   const originYSignal = useSignal(DEFAULT_ORIGIN_Y);
+  const backgroundColorSignal = useSignal("rgb(0,0,0)");
 
   const resXString = useSignalValue(resolutionXSignal);
   const resYString = useSignalValue(resolutionYSignal);
@@ -59,12 +60,14 @@ export default function Animator({
 
   useEffect(() => {
     const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
     const baseRender = createRenderer(canvas, renderTree);
 
     const render = (frameTime: number) => {
       const originX = parseRangeValue(originXSignal.get(), 0, 1);
       const originY = parseRangeValue(originYSignal.get(), 0, 1);
 
+      // update canvas size
       const resolutionX = Math.floor(
         parseRangeValue(resolutionXSignal.get(), MIN_RESOLUTION),
       );
@@ -76,6 +79,11 @@ export default function Animator({
 
       canvas.width = resolutionX * scale;
       canvas.height = resolutionY * scale;
+
+      // update bg
+      ctx.fillStyle = backgroundColorSignal.get();
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       baseRender(frameTime, originX, originY, scale);
     };
 
@@ -83,12 +91,6 @@ export default function Animator({
       // cancel recordings if there's nothing to record
       alert("Load an animation first!");
       recordingSignal.set("off");
-    }
-
-    if (renderTree.rootOrder.length == 0) {
-      // nothing to render, so we'll avoid a render loop
-      render(0);
-      return;
     }
 
     timeSignal.set(0);
@@ -222,6 +224,15 @@ export default function Animator({
             >
               <ResetIcon />
             </button>
+          </div>
+
+          <div>
+            <span>Background:</span>
+            <input
+              type="color"
+              defaultValue="rgb(0,0,0)"
+              onChange={(e) => backgroundColorSignal.set(e.target.value)}
+            />
           </div>
         </div>
 

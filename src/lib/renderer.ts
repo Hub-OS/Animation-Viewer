@@ -3,9 +3,7 @@ import { BoomSheetsAnimation, BoomSheetsFrame } from "../boomsheets-animations";
 import lcm from "compute-lcm";
 
 function checkedLcm(values: number[]) {
-  console.log(values);
   values = values.filter((n) => Number.isFinite(n) && n > 0);
-  console.log(values);
 
   const defaultValue = values[0] ?? 0;
   return values.length == 0 ? defaultValue : (lcm(...values) ?? defaultValue);

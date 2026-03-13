@@ -1,4 +1,5 @@
-import { Signal, useSignalValue } from "../hooks/use-signal";
+import { useId } from "react";
+import { Signal, useSignal, useSignalValue } from "../hooks/use-signal";
 import {
   BoomSheet,
   BoomSheetsAnimation,
@@ -16,10 +17,12 @@ import ExpandLessIcon from "@mui/icons-material/ChevronRight";
 import PointIcon from "@mui/icons-material/MyLocation";
 import AnimationIcon from "@mui/icons-material/Animation";
 import PlaybackIcon from "@mui/icons-material/Loop";
+import AttachIcon from "@mui/icons-material/Add";
 import * as headlessTreeCore from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import classNames from "classnames";
 import { generateDerivedAnimations } from "../lib/derived-animations";
+import { ATTACHMENTS, createAttachment } from "../lib/common-attachments";
 
 export type RenderTree = {
   rootOrder: string[];
@@ -284,6 +287,10 @@ export default function InputSheetList({
     ],
   });
 
+  const popoverContext =
+    useSignal<headlessTreeCore.ItemInstance<RenderItem> | null>(null);
+  const popoverId = useId();
+
   return (
     <div className={classes.listBorder}>
       <div className={classes.list} {...tree.getContainerProps()}>
@@ -417,10 +424,27 @@ export default function InputSheetList({
               {/* actions */}
               <div>
                 <button
+                  title="Add Attachment"
+                  className="icon-button"
+                  disabled={recording}
+                  popoverTarget={popoverId}
+                  onClick={(e) => {
+                    popoverContext.set(item);
+                    e.stopPropagation();
+                  }}
+                >
+                  <AttachIcon />
+                </button>
+
+                <button
                   title="Duplicate"
                   className="icon-button"
                   disabled={recording}
-                  onClick={() => duplicateItem(renderTreeSignal, item)}
+                  onClick={(e) => {
+                    duplicateItem(renderTreeSignal, item);
+                    tree.rebuildTree();
+                    e.stopPropagation();
+                  }}
                 >
                   <CopyIcon />
                 </button>
@@ -429,9 +453,11 @@ export default function InputSheetList({
                   title="Delete"
                   className="icon-button"
                   disabled={recording}
-                  onClick={() =>
-                    removeItem(renderTreeSignal, sheetsSignal, item)
-                  }
+                  onClick={(e) => {
+                    removeItem(renderTreeSignal, sheetsSignal, item);
+                    tree.rebuildTree();
+                    e.stopPropagation();
+                  }}
                 >
                   <DeleteIcon />
                 </button>
@@ -441,6 +467,44 @@ export default function InputSheetList({
         })}
 
         <div style={tree.getDragLineStyle()} className={classes.dragLine} />
+      </div>
+
+      <div id={popoverId} popover="auto" className={classes.attachmentPopover}>
+        <div className={classes.attachmentList}>
+          {ATTACHMENTS.map((attachment) => (
+            <button
+              key={attachment.name}
+              popoverTarget={popoverId}
+              onClick={() => {
+                const parentItem = popoverContext.get();
+
+                if (!parentItem) {
+                  return;
+                }
+
+                const parentId = parentItem.getId();
+
+                const renderTree = { ...renderTreeSignal.get() };
+
+                if (!parentId || !renderTree.nodes[parentId]) {
+                  return;
+                }
+
+                const sheets = { ...sheetsSignal.get() };
+
+                createAttachment(sheets, renderTree, parentId, attachment);
+
+                sheetsSignal.set(sheets);
+                renderTreeSignal.set(renderTree);
+
+                tree.rebuildTree();
+                parentItem.expand();
+              }}
+            >
+              {attachment.name}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

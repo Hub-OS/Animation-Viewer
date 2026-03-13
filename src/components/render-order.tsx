@@ -177,7 +177,7 @@ function duplicateItem(
   const treeData = { ...renderTreeSignal.get() };
 
   const id = uuidv4();
-  treeData.nodes[id] = { ...item.getItemData(), id };
+  treeData.nodes[id] = { ...item.getItemData(), children: [], id };
 
   const prevId = item.getId();
   updateRenderTreeChildren(treeData, item.getParent()!.getId(), (c) =>

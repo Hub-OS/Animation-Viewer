@@ -172,10 +172,13 @@ export default function createRenderer(
       left: number;
     };
 
+    const initialLeft = Math.floor(resolutionX * originX);
+    const initialTop = Math.floor(resolutionY * originY);
+
     const rootData: ParentData = {
       frameIndex: 0,
-      left: Math.floor(resolutionX * originX),
-      top: Math.floor(resolutionY * originY),
+      left: initialLeft,
+      top: initialTop,
     };
 
     // depth first search
@@ -284,6 +287,10 @@ export default function createRenderer(
           x += Math.floor(velPoint.x * frameTime * scale) / scale;
           y += Math.floor(velPoint.y * frameTime * scale) / scale;
         }
+
+        // avoid moving with the origin
+        x -= initialLeft;
+        y -= initialTop;
 
         ctx.translate(x, y);
         ctx.fillStyle = pattern;

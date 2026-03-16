@@ -36,7 +36,7 @@ const keyEndRegex = /[\s=]/g;
 function matchGRegexFrom(
   text: string,
   regex: RegExp,
-  index: number
+  index: number,
 ): RegExpMatchArray | null {
   regex.lastIndex = index;
   return regex.exec(text);
@@ -78,7 +78,7 @@ function findClosingQuote(text: string, index: number): number {
 function parseAttributes(
   line: string,
   lineNumber: number,
-  attributeStart?: number
+  attributeStart?: number,
 ): Attributes {
   const attributes: Attributes = {};
 
@@ -99,7 +99,7 @@ function parseAttributes(
 
     if (!match) {
       throw new Error(
-        `Unexpected "${line.slice(index)}" on line ${lineNumber}`
+        `Unexpected "${line.slice(index)}" on line ${lineNumber}`,
       );
     }
 
@@ -206,7 +206,7 @@ export function parseSheet(text: string): BoomSheet {
 
       if (spaceIndex == -1) {
         throw new Error(
-          `Animation is missing state name on line ${lineNumber}`
+          `Animation is missing state name on line ${lineNumber}`,
         );
       }
 
@@ -233,7 +233,7 @@ export function parseSheet(text: string): BoomSheet {
 
       if (state == undefined) {
         throw new Error(
-          `Animation is missing state name on line ${lineNumber}`
+          `Animation is missing state name on line ${lineNumber}`,
         );
       }
 
@@ -247,7 +247,7 @@ export function parseSheet(text: string): BoomSheet {
     } else if (line.startsWith("frame") || line.startsWith("blank")) {
       if (!currentAnimation) {
         throw new Error(
-          `No animation state to associate frame with on line ${lineNumber}`
+          `No animation state to associate frame with on line ${lineNumber}`,
         );
       }
 
@@ -271,7 +271,7 @@ export function parseSheet(text: string): BoomSheet {
     } else if (line.startsWith("point ")) {
       if (!currentFrame) {
         throw new Error(
-          `No frame to associate point with on line ${lineNumber}`
+          `No frame to associate point with on line ${lineNumber}`,
         );
       }
 
@@ -298,8 +298,8 @@ export function parseSheet(text: string): BoomSheet {
 
       const point: BoomSheetsPoint = {
         label,
-        x: parseFloat(attributes.x),
-        y: parseFloat(attributes.y),
+        x: parseFloat(attributes.x) || 0,
+        y: parseFloat(attributes.y) || 0,
       };
 
       currentFrame.points.push(point);
@@ -321,7 +321,7 @@ type SerializeObjectOptions = {
 function serializeObject(
   name: string,
   object: { [key: string]: any },
-  options: SerializeObjectOptions = { quoteAllValues: true }
+  options: SerializeObjectOptions = { quoteAllValues: true },
 ): string {
   const text: string[] = [name];
 

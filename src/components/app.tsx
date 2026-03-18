@@ -10,6 +10,7 @@ export default function App() {
     nodes: {},
   });
   const sheetsSignal = useSignal<InputSheets>({});
+  const structureVersionSignal = useSignal(0);
   const recording = useSignalLens(recordingSignal, (state) => state != "off");
 
   return (
@@ -35,12 +36,14 @@ export default function App() {
         <InputSheetList
           sheetsSignal={sheetsSignal}
           renderTreeSignal={renderOrderSignal}
+          structureVersionSignal={structureVersionSignal}
           recording={recording}
         />
 
         <Animator
           sheetsSignal={sheetsSignal}
           renderTreeSignal={renderOrderSignal}
+          structureVersionSignal={structureVersionSignal}
           recording={recording}
         />
       </div>

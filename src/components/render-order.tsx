@@ -252,10 +252,12 @@ function removeItem(
 export default function InputSheetList({
   sheetsSignal,
   renderTreeSignal,
+  structureVersionSignal,
   recording,
 }: {
   sheetsSignal: Signal<InputSheets>;
   renderTreeSignal: Signal<RenderTree>;
+  structureVersionSignal: Signal<number>;
   recording: boolean;
 }) {
   const treeData = useSignalValue(renderTreeSignal);
@@ -282,6 +284,9 @@ export default function InputSheetList({
       const treeData = { ...renderTreeSignal.get() };
       updateRenderTreeChildren(treeData, item.getId(), () => newChildren);
       renderTreeSignal.set(treeData);
+
+      // increment version to restart animations
+      structureVersionSignal.add(1);
     }),
     canDropForeignDragObject: () => true,
     onDropForeignDragObject: async (dataTransfer, target) => {
@@ -386,6 +391,9 @@ export default function InputSheetList({
                       const treeData = { ...renderTreeSignal.get() };
                       treeData.nodes[item.getId()].parentPoint = e.target.value;
                       renderTreeSignal.set(treeData);
+
+                      // increment version to restart animations
+                      structureVersionSignal.add(1);
                     }}
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -410,6 +418,9 @@ export default function InputSheetList({
                     const treeData = { ...renderTreeSignal.get() };
                     treeData.nodes[item.getId()].state = e.target.value;
                     renderTreeSignal.set(treeData);
+
+                    // increment version to restart animations
+                    structureVersionSignal.add(1);
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -432,6 +443,9 @@ export default function InputSheetList({
                     treeData.nodes[item.getId()].playback = e.target
                       .value as RenderItem["playback"];
                     renderTreeSignal.set(treeData);
+
+                    // increment version to restart animations
+                    structureVersionSignal.add(1);
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -475,6 +489,8 @@ export default function InputSheetList({
                     renderItem.hidden = !renderItem.hidden;
                     renderTreeSignal.set(renderTree);
                     e.stopPropagation();
+
+                    // avoid restarting animations for toggling visibility
                   }}
                 >
                   {renderItem.hidden ? <ShowIcon /> : <HideIcon />}
@@ -488,6 +504,9 @@ export default function InputSheetList({
                     duplicateItem(renderTreeSignal, item);
                     tree.rebuildTree();
                     e.stopPropagation();
+
+                    // increment version to restart animations
+                    structureVersionSignal.add(1);
                   }}
                 >
                   <CopyIcon />
@@ -501,6 +520,9 @@ export default function InputSheetList({
                     removeItem(renderTreeSignal, sheetsSignal, item);
                     tree.rebuildTree();
                     e.stopPropagation();
+
+                    // increment version to restart animations
+                    structureVersionSignal.add(1);
                   }}
                 >
                   <DeleteIcon />
@@ -554,6 +576,9 @@ export default function InputSheetList({
                 tree.rebuildTree();
                 popoverItem.expand();
                 tree.getItemInstance(attachmentId).expand();
+
+                // increment version to restart animations
+                structureVersionSignal.add(1);
               }}
             >
               {attachment.name}

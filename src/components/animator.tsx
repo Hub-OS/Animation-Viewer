@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Signal, useSignal, useSignalValue } from "../hooks/use-signal";
+import {
+  Signal,
+  useSignal,
+  useSignalLens,
+  useSignalValue,
+} from "../hooks/use-signal";
 import * as classes from "./animator.module.css";
 import { InputSheets, RenderTree } from "./render-order";
 import VideoControls from "./video-controls";
@@ -29,14 +34,17 @@ function parseRangeValue(stringValue: string, min: number, max?: number) {
 export default function Animator({
   sheetsSignal,
   renderTreeSignal,
+  structureVersionSignal,
   recording,
 }: {
   sheetsSignal: Signal<InputSheets>;
   renderTreeSignal: Signal<RenderTree>;
+  structureVersionSignal: Signal<number>;
   recording: boolean;
 }) {
   const sheets = useSignalValue(sheetsSignal);
   const renderTree = useSignalValue(renderTreeSignal);
+  const structureVersion = useSignalValue(structureVersionSignal);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const resolutionXSignal = useSignal("240");
@@ -140,7 +148,7 @@ export default function Animator({
     return () => {
       valid = false;
     };
-  }, [sheets, renderTree, resXString, resYString, recording]);
+  }, [sheets, structureVersion, resXString, resYString, recording]);
 
   return (
     <div className={classes.root}>
